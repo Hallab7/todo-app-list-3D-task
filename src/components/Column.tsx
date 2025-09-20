@@ -5,6 +5,7 @@ import Card from "./Card";
 import { Todo } from "@/types";
 import { useTodos } from "@/context/TodoContext";
 import { useDroppable } from "@dnd-kit/core";
+import { useTheme } from "@/context/ThemeContext";
 
 type ColumnProps = {
   id: "todo" | "inprogress" | "done"; // droppable id
@@ -15,6 +16,9 @@ type ColumnProps = {
 
 export default function Column({ id, title, items, status }: ColumnProps) {
   const { addTodo } = useTodos();
+  const { theme } = useTheme();
+  const darkMode = theme === "dark";
+
   const [adding, setAdding] = useState(false);
   const [value, setValue] = useState("");
 
@@ -34,26 +38,49 @@ export default function Column({ id, title, items, status }: ColumnProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`w-80 p-3 border-dashed border-2 rounded-lg flex flex-col transition-colors ${
-        isOver ? "border-blue-500 bg-blue-50" : "border-gray-200"
+      className={`w-80 p-4 px-6  rounded-lg flex flex-col transition-colors ${
+        isOver
+          ? darkMode
+            ? "border-blue-400 bg-[#24262C]"
+            : " border-blue-500 bg-blue-50"
+          : darkMode
+          ? "border-gray-700 bg-[#1a1b1f]"
+          : "border-dashed border-2 border-gray-200 bg-white"
       }`}
     >
+      {/* Header */}
       <div className="flex items-center justify-between mb-3">
-        <div className="text-sm font-semibold">
-          {title} <span className="text-gray-400">({items.length})</span>
+        <div
+          className={`text-sm font-semibold ${
+            darkMode ? "text-gray-200" : "text-gray-800"
+          }`}
+        >
+          {title}{" "}
+          <span className={darkMode ? "text-gray-500" : "text-gray-400"}>
+            ({items.length})
+          </span>
         </div>
         <button
-          className="text-xs text-gray-500"
+          className={`text-xs ${
+            darkMode
+              ? "text-gray-400 hover:text-gray-200"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
           onClick={() => setAdding((s) => !s)}
         >
           + Add new task
         </button>
       </div>
 
+      {/* Add new task form */}
       {adding && (
         <form onSubmit={submit} className="mb-2">
           <input
-            className="w-full p-2 border rounded mb-2"
+            className={`w-full p-2 border rounded mb-2 ${
+              darkMode
+                ? "bg-[#0b0b0c] border-gray-600 text-gray-200 placeholder-gray-500"
+                : "bg-white border-gray-300 text-gray-900 placeholder-gray-400"
+            }`}
             placeholder="Task title"
             value={value}
             onChange={(e) => setValue(e.target.value)}
@@ -61,13 +88,21 @@ export default function Column({ id, title, items, status }: ColumnProps) {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="px-3 py-1 bg-black text-white rounded"
+              className={`px-3 py-1 rounded ${
+                darkMode
+                  ? "bg-gray-700 text-white hover:bg-gray-600"
+                  : "bg-black text-white hover:bg-gray-800"
+              }`}
             >
               Add
             </button>
             <button
               type="button"
-              className="px-3 py-1 border rounded"
+              className={`px-3 py-1 border rounded ${
+                darkMode
+                  ? "border-gray-600 text-gray-300 hover:bg-gray-800"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-100"
+              }`}
               onClick={() => setAdding(false)}
             >
               Cancel
@@ -76,13 +111,19 @@ export default function Column({ id, title, items, status }: ColumnProps) {
         </form>
       )}
 
-      <div className="space-y-4 overflow-auto max-h-[64vh]">
+      {/* Cards */}
+      <div className="space-y-4 overflow-auto max-h-[64vh] w-full">
         {items.map((item) => (
           <Card key={item.id} todo={item} />
         ))}
       </div>
 
-      <div className="mt-auto text-xs text-gray-400 pt-2">
+      {/* Footer */}
+      <div
+        className={`mt-auto text-xs pt-2 ${
+          darkMode ? "text-gray-500" : "text-gray-400"
+        }`}
+      >
         Drag your task here...
       </div>
     </div>

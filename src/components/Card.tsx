@@ -5,15 +5,18 @@ import { Todo } from "@/types";
 import { useTodos } from "@/context/TodoContext";
 import { MessageSquare, Paperclip, Menu } from "lucide-react";
 import { useDraggable } from "@dnd-kit/core";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function Card({ todo }: { todo: Todo }) {
   const { updateTodo, moveTodo, deleteTodo } = useTodos();
+  const { theme } = useTheme();
+  const darkMode = theme === "dark";
 
   // make the card draggable
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
-      id: todo.id, // unique identifier for drag
-      data: { todo }, // pass todo data along
+      id: todo.id,
+      data: { todo },
     });
 
   const style = {
@@ -24,29 +27,6 @@ export default function Card({ todo }: { todo: Todo }) {
     cursor: "grab",
   };
 
-  const inc = () => {
-    const next = Math.min(10, todo.progress + 1);
-    updateTodo(todo.id, {
-      progress: next,
-      column: next >= 10 ? "done" : todo.column,
-    });
-  };
-
-  const dec = () => {
-    const next = Math.max(0, todo.progress - 1);
-    updateTodo(todo.id, { progress: next });
-  };
-
-  const moveLeft = () => {
-    if (todo.column === "inprogress") moveTodo(todo.id, "todo");
-    else if (todo.column === "done") moveTodo(todo.id, "inprogress");
-  };
-
-  const moveRight = () => {
-    if (todo.column === "todo") moveTodo(todo.id, "inprogress");
-    else if (todo.column === "inprogress") moveTodo(todo.id, "done");
-  };
-
   const progressPercent = Math.round((todo.progress / 10) * 100);
 
   return (
@@ -55,21 +35,35 @@ export default function Card({ todo }: { todo: Todo }) {
       style={style}
       {...listeners}
       {...attributes}
-      className={`bg-white p-4 rounded-lg shadow-sm border border-gray-100 transition-shadow ${
-        isDragging ? "shadow-lg" : ""
+      className={`w-full p-4 rounded-lg border transition-shadow ${
+        isDragging ? "shadow-lg" : "shadow-sm"
+      } ${
+        darkMode
+          ? "bg-[#292B31] border-gray-700 text-gray-200"
+          : "bg-white border-gray-100 text-gray-900"
       }`}
     >
       {/* Header */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between w-full">
         <div>
-          <h3 className="font-semibold text-sm text-gray-900">{todo.title}</h3>
+          <h3
+            className={`font-semibold text-sm ${
+              darkMode ? "text-gray-100" : "text-gray-900"
+            }`}
+          >
+            {todo.title}
+          </h3>
           {todo.project && (
-            <p className="text-xs text-gray-400">{todo.project}</p>
+            <p className={darkMode ? "text-gray-500 text-xs" : "text-gray-400 text-xs"}>
+              {todo.project}
+            </p>
           )}
         </div>
         <button
           onClick={() => deleteTodo(todo.id)}
-          className="text-gray-400 hover:text-red-500"
+          className={`hover:text-red-500 ${
+            darkMode ? "text-gray-500" : "text-gray-400"
+          }`}
         >
           •••
         </button>
@@ -77,14 +71,22 @@ export default function Card({ todo }: { todo: Todo }) {
 
       {/* Progress */}
       <div className="mt-3">
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div
+          className={`flex items-center justify-between text-xs ${
+            darkMode ? "text-gray-400" : "text-gray-500"
+          }`}
+        >
           <span className="flex items-center gap-1">
-            <Menu size={12} className="text-gray-400" />
+            <Menu size={12} className={darkMode ? "text-gray-500" : "text-gray-400"} />
             Progress
           </span>
           <span className="font-medium">{todo.progress}/10</span>
         </div>
-        <div className="h-1.5 mt-1 bg-gray-200 rounded-full overflow-hidden">
+        <div
+          className={`h-1.5 mt-1 rounded-full overflow-hidden ${
+            darkMode ? "bg-gray-700" : "bg-gray-200"
+          }`}
+        >
           <div
             style={{ width: `${progressPercent}%` }}
             className={`h-1.5 rounded-full transition-all ${
@@ -95,8 +97,16 @@ export default function Card({ todo }: { todo: Todo }) {
       </div>
 
       {/* Footer */}
-      <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-        <span className="px-3 py-1 bg-gray-100 rounded-md text-gray-600 font-medium">
+      <div
+        className={`mt-4 flex items-center justify-between text-xs ${
+          darkMode ? "text-gray-400" : "text-gray-500"
+        }`}
+      >
+        <span
+          className={`px-3 py-1 rounded-md font-medium ${
+            darkMode ? "bg-gray-800 text-gray-300" : "bg-gray-100 text-gray-600"
+          }`}
+        >
           {todo.date || "No date"}
         </span>
         <div className="flex items-center gap-4">

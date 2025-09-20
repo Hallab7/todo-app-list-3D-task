@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useTodos } from "@/context/TodoContext";
-import { useTheme } from "@/context/ThemeContext"; // ✅ use global theme
+import { useTheme } from "@/context/ThemeContext";
 import {
   User,
   Calendar,
@@ -20,7 +20,7 @@ import UploadIcon from "../assets/icons/upload.svg";
 
 export default function Sidebar() {
   const { todos } = useTodos();
-  const { theme, setTheme } = useTheme(); // ✅ global theme
+  const { theme, setTheme } = useTheme();
   const darkMode = theme === "dark";
 
   const columns = {
@@ -53,7 +53,7 @@ export default function Sidebar() {
   return (
     <div className={`flex ${darkMode ? "bg-[#0b0b0c]" : "bg-white"}`}>
       {/* ---------- LEFT DARK VERTICAL BAR ---------- */}
-      <div className="w-14 min-h-screen flex flex-col justify-between items-center py-4 px-8 bg-[#1C1D22]">
+      <div className="fixed top-0 left-0 w-14 h-screen flex flex-col justify-between items-center py-4 px-8 bg-[#1C1D22]">
         <div className="flex flex-col items-center gap-6">
           {/* top dots */}
           <div className="pt-1 flex gap-2">
@@ -175,41 +175,25 @@ export default function Sidebar() {
 
       {/* ---------- MAIN SIDEBAR ---------- */}
       <aside
-        className={`w-[220px] min-h-screen p-6 flex flex-col justify-between border-r ${
-          darkMode
-            ? "bg-[#222327] text-gray-200 border-[#2C2C2E]"
-            : "bg-white text-gray-900 border-gray-200"
-        }`}
+        className={`ml-14 w-[220px] min-h-screen px-6 pt-6 flex flex-col justify-between border-r ${
+    darkMode
+      ? "bg-[#222327] text-gray-200 border-[#2C2C2E]"
+      : "bg-white text-gray-900 border-gray-200"
+  }`}
       >
         <div>
           {/* Header */}
           <div className="flex items-center justify-between mb-8">
             <div className="text-xl font-bold">Projects</div>
-            <div
-              className={`w-6 h-6 rounded flex items-center justify-center text-lg cursor-pointer ${
-                darkMode
-                  ? "bg-[#2C2C2E] text-gray-300"
-                  : "bg-gray-100 text-gray-600"
-              }`}
-            >
-              +
-            </div>
-          </div>
-
-          {/* Team */}
-          <div className="mb-6">
-            <div
-              className={`text-sm font-semibold flex items-center justify-between ${
-                darkMode ? "text-gray-400" : "text-gray-700"
-              }`}
-            >
-              <span>Team</span>
-              <button onClick={() => setShowTeam(!showTeam)} className="p-1">
-                {showTeam ? (
-                  <ChevronDown className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <ChevronRight className="w-4 h-4 text-gray-400" />
-                )}
+            <div>
+              <button
+                className={`w-6 h-6 rounded-full flex items-center justify-center text-lg cursor-pointer ${
+                  darkMode
+                    ? "bg-[#2C2C2E] text-gray-300"
+                    : "bg-gray-100 text-gray-600"
+                }`}
+              >
+                +
               </button>
             </div>
           </div>
@@ -234,24 +218,39 @@ export default function Sidebar() {
               </button>
             </div>
             <ul
-              className={`mt-3 space-y-2 text-sm transition-all duration-300 ease-in-out ${
+              className={`relative mt-3 space-y-2 text-sm pl-2 transition-all duration-300 ease-in-out ${
                 showProjects
                   ? "max-h-60 opacity-100"
                   : "max-h-0 opacity-0 overflow-hidden"
               }`}
             >
-              <li className="pl-4 text-gray-500">All projects (3)</li>
+              {/* Vertical line */}
+              <span
+                className="absolute left-1 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-600"
+                aria-hidden="true"
+              ></span>
+
+              <li className="relative pl-6 text-gray-500 before:content-[''] before:absolute before:-left-1 before:top-1/2 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-600">
+                All projects (3)
+              </li>
+
               <li
-                className={`pl-4 rounded-md py-1 px-2 font-medium border-l-2 ${
+                className={`relative pl-6 py-1 px-2 font-medium before:content-[''] before:absolute -before:-left-1 before:top-1/2 before:w-4 before:h-px ${
                   darkMode
-                    ? "bg-[#2D2D2F] text-white border-gray-500"
-                    : "bg-gray-100 text-gray-900 border-gray-300"
+                    ? "bg-[#2D2D2F] text-white border-gray-500 before:bg-gray-600"
+                    : "bg-gray-100 text-gray-900 border-gray-300 before:bg-gray-300"
                 }`}
               >
                 Design system
               </li>
-              <li className="pl-6 border-l text-gray-400">User flow</li>
-              <li className="pl-6 border-l text-gray-400">Ux research</li>
+
+              <li className="relative pl-6 text-gray-400 before:content-[''] before:absolute before:-left-1 before:top-1/2 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-600">
+                User flow
+              </li>
+
+              <li className="relative pl-6 text-gray-400 before:content-[''] before:absolute before:-left-1 before:top-1/2 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-600">
+                UX research
+              </li>
             </ul>
           </div>
 
@@ -272,33 +271,43 @@ export default function Sidebar() {
               </button>
             </div>
             <ul
-              className={`mt-3 space-y-2 text-sm transition-all duration-300 ease-in-out ${
+              className={`relative mt-3 space-y-2 text-sm pl-2 transition-all duration-300 ease-in-out ${
                 showTasks
                   ? "max-h-60 opacity-100"
                   : "max-h-0 opacity-0 overflow-hidden"
               }`}
             >
-              <li className="pl-4 text-gray-500">All tasks ({totalTasks})</li>
-              <li className="pl-6 border-l text-gray-500">
+              <span
+                className="absolute left-1 top-0 bottom-0 w-px bg-gray-300 dark:bg-gray-600"
+                aria-hidden="true"
+              ></span>
+
+              <li className="relative pl-6 text-gray-500 before:content-[''] before:absolute before:-left-1 before:top-1/2 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-600">
+                All tasks ({totalTasks})
+              </li>
+
+              <li className="relative pl-6 text-gray-500 before:content-[''] before:absolute before:-left-1 before:top-1/2 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-600">
                 To do ({todoTasks})
               </li>
+
               <li
-                className={`pl-6 rounded-md py-1 px-2 font-medium border-l-2 ${
+                className={`relative pl-6 py-1 px-2 font-medium before:content-[''] before:absolute before:-left-1 before:top-1/2 before:w-4 before:h-px ${
                   darkMode
-                    ? "bg-[#2D2D2F] text-white border-gray-500"
-                    : "bg-gray-100 text-gray-900 border-gray-300"
+                    ? "bg-[#2D2D2F] text-white border-gray-500 before:bg-gray-600"
+                    : "bg-gray-100 text-gray-900 border-gray-300 before:bg-gray-300"
                 }`}
               >
                 In Progress ({inProgressTasks})
               </li>
-              <li className="pl-6 border-l text-gray-400">
+
+              <li className="relative pl-6 text-gray-400 before:content-[''] before:absolute before:-left-1 before:top-1/2 before:w-4 before:h-px before:bg-gray-300 dark:before:bg-gray-600">
                 Done ({doneTasks})
               </li>
             </ul>
           </div>
 
-          {/* Reminders & Messengers */}
-          <div className="mb-6 space-y-4">
+          {/* Reminders */}
+          <div className="mb-6">
             <div
               className={`text-sm font-semibold flex items-center justify-between ${
                 darkMode ? "text-gray-400" : "text-gray-700"
@@ -316,6 +325,11 @@ export default function Sidebar() {
                 )}
               </button>
             </div>
+            
+          </div>
+
+          {/* Messengers */}
+          <div className="mb-6">
             <div
               className={`text-sm font-semibold flex items-center justify-between ${
                 darkMode ? "text-gray-400" : "text-gray-700"
@@ -338,7 +352,7 @@ export default function Sidebar() {
 
         {/* Theme Toggle */}
         <div
-          className={`flex justify-between items-center text-sm p-1 rounded-full ${
+          className={`flex justify-between items-center text-sm p-1 rounded-full mb-6 ${
             darkMode
               ? "bg-[#2D2D2F] text-gray-200"
               : "bg-gray-100 text-gray-700 border border-gray-200"
@@ -381,18 +395,21 @@ export default function Sidebar() {
             className={`flex items-center gap-2 p-2 rounded-full ${
               darkMode
                 ? "bg-[#444] text-white"
-                : "text-gray-500 hover:text-gray-900"
+                : "text-gray-500 hover:text-black"
             }`}
           >
             {/* Moon */}
             <svg
+              xmlns="http://www.w3.org/2000/svg"
               className="w-4 h-4"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
               strokeWidth="1.6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+              <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z" />
             </svg>
             <span>Dark</span>
           </button>

@@ -61,8 +61,8 @@ export default function Card({ todo }: { todo: Todo }) {
         </div>
         <button
           onClick={() => deleteTodo(todo.id)}
-          className={`hover:text-red-500 ${
-            darkMode ? "text-gray-500" : "text-gray-400"
+          className={`w-7 h-7 rounded-full text-sm border border-2  hover:text-gray-500 ${
+            darkMode ? "border-white/10  text-gray-500" : "text-gray-400"
           }`}
         >
           •••
@@ -90,7 +90,7 @@ export default function Card({ todo }: { todo: Todo }) {
           <div
             style={{ width: `${progressPercent}%` }}
             className={`h-1.5 rounded-full transition-all ${
-              todo.progress >= 10 ? "bg-green-500" : "bg-orange-400"
+              todo.progress <= 4 ? "bg-[#FF7979]" : ( todo.progress >=10) ? "bg-green-500" : "bg-orange-400"
             }`}
           ></div>
         </div>

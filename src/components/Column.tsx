@@ -38,7 +38,7 @@ export default function Column({ id, title, items, status }: ColumnProps) {
   return (
     <div
       ref={setNodeRef}
-      className={`w-80 p-4 px-6  rounded-lg flex flex-col transition-colors ${
+      className={`min-w-80 w-full p-4 px-6  rounded-lg flex flex-col transition-colors ${
         isOver
           ? darkMode
             ? "border-blue-400 bg-[#24262C]"
@@ -61,15 +61,26 @@ export default function Column({ id, title, items, status }: ColumnProps) {
           </span>
         </div>
         <button
-          className={`text-xs ${
+          className={`text-xs flex gap-1 ${
             darkMode
               ? "text-gray-400 hover:text-gray-200"
               : "text-gray-500 hover:text-gray-700"
           }`}
           onClick={() => setAdding((s) => !s)}
         >
-          + Add new task
+          <span
+              className={`w-4 h-4 rounded-full flex items-center justify-center text-sm ${
+                darkMode
+                  ? "bg-white/10 text-gray-300"
+                  : "bg-gray-300 text-gray-600"
+              }`}
+            >
+              +
+            </span>
+            Add new task
         </button>
+        
+              
       </div>
 
       {/* Add new task form */}
@@ -112,20 +123,20 @@ export default function Column({ id, title, items, status }: ColumnProps) {
       )}
 
       {/* Cards */}
-      <div className="space-y-4 overflow-auto max-h-[64vh] w-full">
+      <div className="space-y-4 overflow-auto max-h-[62vh] w-full">
         {items.map((item) => (
           <Card key={item.id} todo={item} />
         ))}
       </div>
 
       {/* Footer */}
-      <div
+      {/* <div
         className={`mt-auto text-xs pt-2 ${
           darkMode ? "text-gray-500" : "text-gray-400"
         }`}
       >
         Drag your task here...
-      </div>
+      </div> */}
     </div>
   );
 }

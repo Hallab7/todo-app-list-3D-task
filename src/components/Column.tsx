@@ -8,7 +8,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { useTheme } from "@/context/ThemeContext";
 
 type ColumnProps = {
-  id: "todo" | "inprogress" | "done"; // droppable id
+  id: "todo" | "inprogress" | "done";
   title: string;
   items: Todo[];
   status: "todo" | "inprogress" | "done";
@@ -128,15 +128,6 @@ export default function Column({ id, title, items, status }: ColumnProps) {
           <Card key={item.id} todo={item} />
         ))}
       </div>
-
-      {/* Footer */}
-      {/* <div
-        className={`mt-auto text-xs pt-2 ${
-          darkMode ? "text-gray-500" : "text-gray-400"
-        }`}
-      >
-        Drag your task here...
-      </div> */}
     </div>
   );
 }

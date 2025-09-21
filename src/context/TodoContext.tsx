@@ -23,7 +23,6 @@ const sample: Todo[] = [
   { id: "t9", title: "Make twitter banner", project: "Twitter marketing", progress: 10, date: "8 Jan 2022", column: "done", messageNo: 6 }
 ];
 
-// 🔧 Get initial todos safely (SSR-friendly)
 const getInitialTodos = (): Todo[] => {
   if (typeof window !== "undefined") {
     try {
@@ -69,7 +68,6 @@ type ContextValue = {
 
 const TodoContext = createContext<ContextValue | null>(null);
 
-// 🟢 Helper: format date or return "Today"
 const formatDate = (d: Date) => {
   const today = new Date();
   const isToday =
@@ -89,7 +87,6 @@ const formatDate = (d: Date) => {
 export default function TodoProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(reducer, { todos: getInitialTodos() });
 
-  // ✅ Persist to localStorage safely
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -103,7 +100,7 @@ export default function TodoProvider({ children }: { children: React.ReactNode }
       id: uuidv4(),
       title,
       project,
-      progress: column === "done" ? 10 : 0, // auto 10 if done
+      progress: column === "done" ? 10 : 0,
       date: formatDate(new Date()),
       column,
     };

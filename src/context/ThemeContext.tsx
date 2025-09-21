@@ -15,7 +15,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setThemeState] = useState<Theme>("light");
 
   useEffect(() => {
-    // Load saved theme or default to system preference
     const saved = localStorage.getItem("theme") as Theme | null;
     if (saved) {
       setThemeState(saved);
@@ -41,7 +40,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// 👇 this is what Sidebar.tsx expects
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) throw new Error("useTheme must be used within ThemeProvider");

@@ -15,7 +15,7 @@ import Card from "./Card";
 export default function TodoBoard() {
   const { todos, moveTodo } = useTodos();
   const [activeTodoId, setActiveTodoId] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false); // ✅ track client mount
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -56,8 +56,6 @@ export default function TodoBoard() {
         />
         <Column id="done" title="Done" items={columns.done} status="done" />
       </div>
-
-      {/* ✅ Only render portal on client */}
       {mounted &&
         createPortal(
           <DragOverlay>

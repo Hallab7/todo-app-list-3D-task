@@ -4,7 +4,7 @@ export interface Todo {
   id: string;
   title: string;
   project?: string;
-  progress: number; // 0..10
+  progress: number;
   date?: string;
   column: ColumnType;
   messageNo?: number  

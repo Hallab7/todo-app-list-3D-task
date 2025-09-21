@@ -12,7 +12,6 @@ export default function Card({ todo }: { todo: Todo }) {
   const { theme } = useTheme();
   const darkMode = theme === "dark";
 
-  // make the card draggable
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: todo.id,

@@ -5,8 +5,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 type CubeProgressProps = {
-  percentage: number; // 0..100
-  size?: number; // outer cube size (default 1.8)
+  percentage: number;
+  size?: number;
 };
 
 function LiquidBox({ percentage = 100, size = 5.8 }: CubeProgressProps) {
@@ -20,7 +20,6 @@ function LiquidBox({ percentage = 100, size = 5.8 }: CubeProgressProps) {
   const surfaceRef = useRef<THREE.Mesh>(null!);
   const currentRef = useRef(0);
 
-  // shader material for wavy top
   const topMaterial = useMemo(() => {
     return new THREE.ShaderMaterial({
       uniforms: {
@@ -62,7 +61,6 @@ function LiquidBox({ percentage = 100, size = 5.8 }: CubeProgressProps) {
     const target = THREE.MathUtils.clamp(percentage / 100, 0, 1);
     currentRef.current = THREE.MathUtils.lerp(currentRef.current, target, 0.08);
 
-    // liquid height update
     if (liquidRef.current) {
       liquidRef.current.scale.y = currentRef.current;
       liquidRef.current.position.y = -H / 2 + (currentRef.current * H) / 2;
@@ -75,7 +73,6 @@ function LiquidBox({ percentage = 100, size = 5.8 }: CubeProgressProps) {
         state.clock.elapsedTime;
     }
 
-    // update colors based on percentage
     let colorHex = "#2563EB";
     if (percentage <= 40) colorHex = "#FF7979";
     else if (percentage <= 90) colorHex = "#F97316";
@@ -95,7 +92,6 @@ function LiquidBox({ percentage = 100, size = 5.8 }: CubeProgressProps) {
 
   return (
     <group>
-      {/* liquid internal box */}
       <mesh ref={liquidRef} position={[0, -H / 2, 0]}>
         <boxGeometry args={[W, H, D]} />
         <meshStandardMaterial

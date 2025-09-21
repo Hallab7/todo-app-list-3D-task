@@ -54,7 +54,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 font-semibold">
+            <div className="flex items-center gap-5 font-semibold">
               <Search
                 className={`hidden sm:block text-sm ${
                   darkMode ? "text-gray-300" : "text-gray-500"

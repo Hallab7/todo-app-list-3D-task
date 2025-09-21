@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
+import TodoProvider from "@/context/TodoContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +17,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="bg-gray-50 text-gray-800 min-h-screen">
         <ThemeProvider>
+          <TodoProvider>
           {children}
+          </TodoProvider>
         </ThemeProvider>
       </body>
     </html>
